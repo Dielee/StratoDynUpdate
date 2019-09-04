@@ -1,11 +1,12 @@
-﻿$DOMAIN="deinedomain.de"
+$DOMAIN="deinedomain.de"
 $USERNAME="deinedomain.de"
 $SUBDOMAIN=""
 $DOMPW="deintratopw"
 
-$LASTIPFILE="LASTEXTIP-Strato"
+$LASTIPFILE=".\LASTEXTIP-Strato"
 $UPDATE_URL="http://dyndns.strato.com/nic/update"
 $UPDATE_URL_PARAM=""
+$DATE = (Get-date -UFormat "%d.%m.%Y - %H:%M" )
 
 $SECPASSWD = ConvertTo-SecureString $DOMPW -AsPlainText -Force
 $CREDENTIAL = New-Object System.Management.Automation.PSCredential($USERNAME, $SECPASSWD)
@@ -15,21 +16,46 @@ $EXTIP=$EXTIP.Content
 
 $UPDATE="https://dyndns.strato.com/nic/update?hostname=${DOMAIN}&myip=${EXTIP}"
 
-$LASTIP=type $LASTIPFILE
+
+$CHECKFILE=Test-Path $LASTIPFILE -PathType Leaf
+
+if ( "$CHECKFILE" -eq "false" )
+{
+        $EXTIP | Out-File $LASTIPFILE
+
+        $ButtonType = [System.Windows.MessageBoxButton]::OK
+        $MessageIcon = [System.Windows.MessageBoxImage]::Information
+        $MessageBody = "Dies ist der erste Program start. Initialisierung wurde abgeschlossen. Bitte starten Sie das Program erneut."
+        $MessageTitle = "Info"
+
+        [System.Windows.MessageBox]::Show($MessageBody,$MessageTitle,$ButtonType,$MessageIcon)
+        
+        exit
+}
+else 
+{
+    $LASTIP=type $LASTIPFILE
+}
+
 
 if ( "$LASTIP" -ne "$EXTIP" )
 {
     $EXTIP | Out-File $LASTIPFILE
 
     $RESULT=Invoke-WebRequest -Uri $UPDATE -Credential $CREDENTIAL
-}
+        
 
-
-if ( "$RESULT.Content" -notmatch "good" )
-{
-    Write-Host "Fehler, IP konnte nicht aktualisiert werden. CODE: $RESULT"
+        if ( "$RESULT.Content" -notmatch "good" )
+        {
+            Write-Output "$DATE - Fehler, IP konnte nicht aktualisiert werden. CODE: $RESULT" >> ".\StratoUpdate.log"
+        }
+        else
+        {
+            Write-Output "$DATE - Update erfolgreich. Neue DynDns IP ist: $EXTIP" >> ".\StratoUpdate.log"
+        }
 }
 else
 {
-    Write-Host "Update erfolgreich. Neue DynDns IP ist: $EXTIP"
+    Write-Output "$DATE - Die IP $LASTIP hat sich nicht verändert. Kein Update notwendig." >> ".\StratoUpdate.log"
 }
+
