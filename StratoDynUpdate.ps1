@@ -62,3 +62,4 @@ else
     Write-Output "$DATE - Die IP $LASTIP hat sich nicht verändert. Kein Update notwendig." >> "$PATH\StratoUpdate.log"
 }
 
+exit
