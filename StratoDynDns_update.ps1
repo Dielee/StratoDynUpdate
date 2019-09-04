@@ -1,9 +1,12 @@
-$DOMAIN="deinedomain.de"
-$USERNAME="deinedomain.de"
-$SUBDOMAIN=""
-$DOMPW="deintratopw"
+Add-Type -AssemblyName PresentationFramework
 
-$LASTIPFILE=".\LASTEXTIP-Strato"
+$DOMAIN="stermann.co"
+$USERNAME="stermann.co"
+$SUBDOMAIN=""
+$DOMPW="!Schalke1904!"
+
+$PATH="C:\Users\Administrator\StratoUpdater"
+$LASTIPFILE="$PATH\LASTEXTIP-Strato"
 $UPDATE_URL="http://dyndns.strato.com/nic/update"
 $UPDATE_URL_PARAM=""
 $DATE = (Get-date -UFormat "%d.%m.%Y - %H:%M" )
@@ -47,15 +50,15 @@ if ( "$LASTIP" -ne "$EXTIP" )
 
         if ( "$RESULT.Content" -notmatch "good" )
         {
-            Write-Output "$DATE - Fehler, IP konnte nicht aktualisiert werden. CODE: $RESULT" >> ".\StratoUpdate.log"
+            Write-Output "$DATE - Fehler, IP konnte nicht aktualisiert werden. CODE: $RESULT" >> "$PATH\StratoUpdate.log"
         }
         else
         {
-            Write-Output "$DATE - Update erfolgreich. Neue DynDns IP ist: $EXTIP" >> ".\StratoUpdate.log"
+            Write-Output "$DATE - Update erfolgreich. Neue DynDns IP ist: $EXTIP" >> "$PATH\StratoUpdate.log"
         }
 }
 else
 {
-    Write-Output "$DATE - Die IP $LASTIP hat sich nicht verändert. Kein Update notwendig." >> ".\StratoUpdate.log"
+    Write-Output "$DATE - Die IP $LASTIP hat sich nicht verändert. Kein Update notwendig." >> "$PATH\StratoUpdate.log"
 }
 
