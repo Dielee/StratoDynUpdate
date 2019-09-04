@@ -1,9 +1,9 @@
 Add-Type -AssemblyName PresentationFramework
 
-$DOMAIN="stermann.co"
-$USERNAME="stermann.co"
+$DOMAIN="deinedomain"
+$USERNAME="deinedoman"
 $SUBDOMAIN=""
-$DOMPW="!Schalke1904!"
+$DOMPW="deinpw"
 
 $PATH="C:\Users\Administrator\StratoUpdater"
 $LASTIPFILE="$PATH\LASTEXTIP-Strato"
